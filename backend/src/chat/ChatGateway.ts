@@ -9,6 +9,7 @@ import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class ChatGateway implements OnModuleInit {
+  [x: string]: any;
 
   private clients = new Set<WebSocket>();
   
@@ -18,6 +19,7 @@ export class ChatGateway implements OnModuleInit {
   ) {}
 
   onModuleInit() {
+    if(process.env.NODE_ENV ==="test") return;
     const wss = new WebSocket.Server({ port: 3001 });
 
     wss.on('connection', (ws: WebSocket, req: any) => {
@@ -121,7 +123,7 @@ export class ChatGateway implements OnModuleInit {
     }
   }
 
-  private broadcast(message: string, sender: WebSocket) {
+  public broadcast(message: string, sender: WebSocket) {
     this.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
