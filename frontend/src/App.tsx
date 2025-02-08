@@ -20,6 +20,7 @@ function App() {
             </AuthGuard>
           }
         />
+        <Route path="/signup" element={<Login/>}/>
         <Route path="*" element={<Navigate to="/login" />}/>
         <Route path="/" element={<Navigate to="/home"/>}/>
         <Route path="/unauthorized" element={<Unauthorized/>}/>
