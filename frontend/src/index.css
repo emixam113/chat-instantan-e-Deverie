@@ -3,9 +3,9 @@
 @tailwind utilities; 
 
 @font-face{
-  font-family: 'poppins';
+  font-family: 'Poppins';
   src: 
   local("Poppins"),
-  url("/frontend/src/assets/fonts/Poppins-Black.ttf")
-  format("truetype");
+  url("/fonts/Poppins-regular.ttf"),
+  format("truetype")
 }

@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'Poppins': ["poppins"]
+        poppins: ["Poppins", "sans-serif"]
       },
       colors: {
           'deverie-blue':"#4F81EF",

@@ -68,7 +68,7 @@ const Login: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96 border border-gray-300">
         {/* Tabs Login / Signup */}
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-gray-200 font-poppins">
           <button
             className={`px-4 py-2 font-medium transition duration-300 ${activeTab === 'signup' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
             onClick={() => handleTabClick('signup')}
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
             Signup
           </button>
           <button
-            className={`px-4 py-2 font-medium transition duration-300 ${activeTab === 'login' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
+            className={`px-4 py-2 font-medium transition duration-300 font-Poppins ${activeTab === 'login' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
             onClick={() => handleTabClick('login')}
           >
             Login
@@ -93,7 +93,7 @@ const Login: React.FC = () => {
                     type="text"
                     id="signup-name"
                     placeholder="Name"
-                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 font-poppins"
                     value={sender}
                     onChange={(e) => setSender(e.target.value)}
                   />
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
                     type="email"
                     id="signup-email"
                     placeholder="Email"
-                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 font-Poppins"
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
                   />
@@ -113,7 +113,7 @@ const Login: React.FC = () => {
                     type="password"
                     id="signup-password"
                     placeholder="Password"
-                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 font-Poppins"
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
                   />
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                     type="email"
                     id="login-email"
                     placeholder="Email"
-                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 font-Poppins"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -138,7 +138,7 @@ const Login: React.FC = () => {
                     type="password"
                     id="login-password"
                     placeholder="Password"
-                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="border border-gray-400 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 font-Poppins"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -158,7 +158,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Affichage des erreurs */}
-        {error && <div className="text-red-500 mt-2">{error}</div>}
+        {error && <div className="text-red-500 mt-2 font-Poppins">{error}</div>}
       </div>
     </div>
   );

@@ -108,7 +108,7 @@ const Chat: React.FC = () =>{
     return (
       <div className="chat-container max-w-3xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md overflow-hidden opacity-98"> 
         <div className="chat-header mb-4 flex items-center justify-between font-Poppins"> 
-          <h1 className="text-3xl font-bold text-gray-800 font-poppins">Chat en direct</h1>
+          <h1 className="text-3xl font-bold text-gray-800 font-Poppins">Chat de Deverie</h1>
           <div className="chat-status">
             {isConnected ? (
               <span className="text-green-600 font-semibold inline-flex items-center"> {/* Style inline-flex pour l'icône */}
@@ -119,10 +119,10 @@ const Chat: React.FC = () =>{
               </span>
             ) : (
               <span className="text-red-600 font-semibold inline-flex items-center font-poppins">
-                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-                Déconnecté
+                Déconnecter
               </span>
             )}
           </div>
@@ -131,7 +131,7 @@ const Chat: React.FC = () =>{
     
         <div className="chat-messages border border-gray-200 rounded-lg p-4 h-96 overflow-y-auto mb-4 bg-white shadow-inner">
           {messages.map((msg) => (
-            <div key={msg.id} className={`message mb-3 p-3 rounded-lg ${typeof msg.sender === 'object' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}> 
+            <div key={msg.id} className={`message mb-3 p-3 rounded-lg font-poppins ${typeof msg.sender === 'object' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}> 
               <div className="font-semibold">
                 {typeof msg.sender === 'object'
                   ? msg.sender.sender || msg.sender.email || 'Inconnu'
@@ -154,7 +154,7 @@ const Chat: React.FC = () =>{
           />
           <button
             onClick={sendMessage}
-            className="bg-blue-700 text-white rounded-lg px-5 py-3 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium" 
+            className="bg-blue-700 text-white rounded-lg px-5 py-3 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium font-poppins" 
           >
             Envoyer
           </button>

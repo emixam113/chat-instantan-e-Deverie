@@ -113,7 +113,7 @@ export class ChatGateway implements OnModuleInit {
     console.log('Serveur WebSocket en écoute sur ws://localhost:3001');
   }
 
-  private async sendHistory(ws: any) {
+  public async sendHistory(ws: any) {
     try {
       const history = await this.chatService.getAllMessage();
       ws.send(JSON.stringify({ type: 'history', data: history }));
