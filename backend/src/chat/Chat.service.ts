@@ -32,7 +32,7 @@ export class ChatService {
         console.log("Message Data received:", messageData);
 
         if (!messageData ||!messageData.senderId ||!messageData.content || messageData.content.trim() === "") {
-            throw new Error("Invalid message data. senderId and content are required.");
+            throw new Error("Invalid message data. senderId and content are requiread.");
         }
 
         const user = await this.userRepository.findOneBy({ id: messageData.senderId });

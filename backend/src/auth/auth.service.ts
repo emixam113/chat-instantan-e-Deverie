@@ -15,7 +15,7 @@ export class AuthService {
     public async SignUp(sender: string, password: string, email: string): Promise<User> {
         const existingUser = await this.usersService.findOneByEmail(email);
         if (existingUser) {
-            throw new Error('Email already exists');
+            throw new UnauthorizedException('Email already exists');
         }
 
         try {

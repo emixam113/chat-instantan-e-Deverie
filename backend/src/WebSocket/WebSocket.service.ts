@@ -60,7 +60,7 @@ export class WebSocketService implements OnModuleInit {
     });
   }
 
-  // Diffuser un message à tous les clients sauf celui qui l'a envoyé
+  // Diffuser un message à tous les clients
   private broadcast(message: string, sender: WebSocket) {
     for (const client of this.clients) {
       if (client !== sender && client.readyState === WebSocket.OPEN) {

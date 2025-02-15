@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { SignUpDto } from '../auth/DTO/Signup.dto';
+import { SignUpDto } from './DTO/Signup.dto';
 import * as request from 'supertest';
 import { ValidationPipe } from '@nestjs/common'; // Importez ValidationPipe
 
@@ -64,6 +64,6 @@ describe('AuthController (e2e)', () => { // Test d'intégration (e2e) car on tes
       .send(signupDto)
       .expect(400)
 
-    expect(response.body.message).toContain('email must be a valid email'); 
+    expect(response.body.message).toContain('email must be a valid email');
   });
 })

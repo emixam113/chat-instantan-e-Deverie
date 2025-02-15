@@ -18,6 +18,11 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }, 
-  "include": ["src/**/*"]
+  },
+  "include": [
+    "src/**/*",
+    "src/auth/auth.controller.spec.ts",
+    "test/auth.service.spec.ts",
+    "src/chat/chat.gateway.spec.ts"
+  ]
 }
