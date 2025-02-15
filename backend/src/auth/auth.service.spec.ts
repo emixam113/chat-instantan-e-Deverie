@@ -32,7 +32,7 @@ describe('AuthService', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  // 🟢 Test de SignUp
+  // Test de SignUp
   describe('SignUp', () => {
     it('should successfully sign up a user', async () => {
       const userDto: CreateUserDTO = { sender: 'testuser', email: 'test@example.com', hashed_password: 'password' };
@@ -87,7 +87,7 @@ describe('AuthService', () => {
     });
   });
 
-  // 🔑 Test de Login
+  //Test de Login
   describe('Login', () => {
     it('should successfully log in a user and return a token', async () => {
       const user: User = { id: 1, email: 'test@example.com', hashed_password: 'hashedpassword' } as User;
