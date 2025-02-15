@@ -2,8 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './DTO/Signup.dto';
+import { LoginDTO } from './DTO/Login.dto';
 import * as request from 'supertest';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, UnauthorizedException } from '@nestjs/common';
 
 describe('AuthController (e2e)', () => {
   let app;
@@ -16,7 +17,10 @@ describe('AuthController (e2e)', () => {
         {
           provide: AuthService,
           useValue: {
+            // Méthode signup renvoie un message de succès
             SignUp: jest.fn().mockResolvedValue({ message: 'User successfully registered' }),
+            // login renvoie un token fictif
+            login: jest.fn().mockResolvedValue({ access_token: 'fake-jwt-token' }),
           },
         },
       ],
@@ -30,43 +34,84 @@ describe('AuthController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close(); // Ferme l'application après les tests
+    await app.close();
   });
 
-  it('should sign up a user', async () => {
-    const signupDto: SignUpDto = {
-      sender: 'testuser',
-      email: 'test@example.com',
-      password: 'testpassword',
-    };
+  describe('POST /auth/signup', () => {
+    it('should sign up a user', async () => {
+      const signupDto: SignUpDto = {
+        sender: 'testuser',
+        email: 'test@example.com',
+        password: 'testpassword',
+      };
 
-    const response = await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(signupDto)
-      .expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/signup')
+        .send(signupDto)
+        .expect(201);
 
-    expect(response.body).toEqual({ message: 'User successfully registered' });
+      expect(response.body).toEqual({ message: 'User successfully registered' });
+      expect(authService.SignUp).toHaveBeenCalledWith(
+        signupDto.sender,
+        signupDto.password,
+        signupDto.email,
+      );
+    });
 
-    expect(authService.SignUp).toHaveBeenCalledWith(
-      signupDto.sender,
-      signupDto.password,
-      signupDto.email,
-    );
+    it('should return an error if email is invalid', async () => {
+      const signupDto: SignUpDto = {
+        sender: 'testuser',
+        email: 'invalid-email',
+        password: 'testpassword',
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/auth/signup')
+        .send(signupDto)
+        .expect(400);
+
+      // On vérifie que le message d'erreur inclut "L'email n'est pas valide."
+      expect(response.body.message).toEqual(
+        expect.arrayContaining(["L'email n'est pas valide."]),
+      );
+    });
   });
 
-  it('should return an error if email is invalid', async () => {
-    const signupDto: SignUpDto = {
-      sender: 'testuser',
-      email: 'invalid-email',
-      password: 'testpassword',
-    };
+  describe('POST /auth/login', () => {
+    it('should login a user and return a token', async () => {
+      const loginDto: LoginDTO = {
+        email: 'test@example.com',
+        password: 'testpassword',
+      };
 
-    const response = await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(signupDto)
-      .expect(400);
+      const response = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginDto)
+        // Par défaut, POST renvoie 201 Created si @HttpCode n'est pas défini
+        .expect(201);
 
-    // Vérifie si le message d'erreur est bien présent dans le tableau d'erreurs retourné
-    expect(response.body.message).toEqual(expect.arrayContaining(["L'email n'est pas valide."]));
+      expect(response.body).toEqual({ access_token: 'fake-jwt-token' });
+      expect(authService.login).toHaveBeenCalledWith(loginDto.email, loginDto.password);
+    });
+
+    it('should return an error if credentials are invalid', async () => {
+      const loginDto: LoginDTO = {
+        email: 'wrong@example.com',
+        password: 'wrongpassword',
+      };
+
+      // On simule une erreur Unauthorized en castant la méthode en jest.Mock
+      (authService.login as jest.Mock).mockRejectedValueOnce(
+        new UnauthorizedException('Invalid credentials'),
+      );
+
+      const response = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginDto)
+        .expect(401);
+
+      expect(response.body.message).toBe('Invalid credentials');
+      expect(authService.login).toHaveBeenCalledWith(loginDto.email, loginDto.password);
+    });
   });
 });
