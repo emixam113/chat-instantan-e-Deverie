@@ -88,12 +88,12 @@ export class ChatGateway implements OnModuleInit, OnModuleDestroy {
       const messageString = data.toString();
       const message = JSON.parse(messageString);
 
-      if (!(client as any).user) {
+      if (!(client as any)?.user) {
+        console.log('Client non authentifié - message rejeté');
         client.send(JSON.stringify({ type: 'error', message: 'Vous devez être authentifié pour envoyer un message.' }));
-        client.close();
-        return;
+        return;  // On stoppe l'exécution ici sans fermer la connexion
       }
-
+    
       const dto = new SendMessageDto();
       dto.content = message.content;
       dto.sender = (client as any).user.id;

@@ -1,9 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
-import { CreateUserDTO } from '../users/DTO/create-user.dto'; // Importez le DTO
 
 @Injectable()
 export class AuthService {
@@ -12,7 +11,23 @@ export class AuthService {
         private readonly usersService: UsersService,
     ) {}
 
+    /**
+     * Inscription d'un nouvel utilisateur
+     */
     public async SignUp(sender: string, password: string, email: string): Promise<User> {
+        if (!sender) {
+            throw new BadRequestException('Sender is required');
+        }
+        if (!email) {
+            throw new BadRequestException('Email is required');
+        }
+        if (!this.isValidEmail(email)) {
+            throw new BadRequestException('Invalid email format');
+        }
+        if (!password) {
+            throw new BadRequestException('Password is required');
+        }
+
         const existingUser = await this.usersService.findOneByEmail(email);
         if (existingUser) {
             throw new UnauthorizedException('Email already exists');
@@ -21,32 +36,51 @@ export class AuthService {
         try {
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const user = new CreateUserDTO();
+            const user = new User();
             user.sender = sender;
             user.hashed_password = hashedPassword;
             user.email = email;
 
-            return this.usersService.save(user); // Utilisez le DTO
+            return await this.usersService.save(user);
         } catch (error) {
-            console.error(error); // Affiche l'erreur complète
-            throw error; // Relancez l'erreur originale
+            console.error('Error during signup:', error);
+            throw new BadRequestException('An error occurred during signup');
         }
     }
 
-    async login(email: string, password: string): Promise<any> {
+    /**
+     * Connexion d'un utilisateur et retour du token JWT
+     */
+    public async login(email: string, password: string): Promise<{ access_token: string }> {
+        if (!email) {
+            throw new BadRequestException('Email is required');
+        }
+        if (!this.isValidEmail(email)) {
+            throw new BadRequestException('Invalid email format');
+        }
+        if (!password) {
+            throw new BadRequestException('Password is required');
+        }
+
         const existingUser = await this.usersService.findOneByEmail(email);
-
         if (!existingUser) {
-            throw new UnauthorizedException('Invalid credentials'); // Exception plus précise
+            throw new UnauthorizedException('Invalid credentials');
         }
 
-        if (await bcrypt.compare(password, existingUser.hashed_password)) {
-            const payload = { id: existingUser.id };
-            return {
-                access_token: this.jwtService.sign(payload),
-            };
+        const passwordMatches = await bcrypt.compare(password, existingUser.hashed_password);
+        if (!passwordMatches) {
+            throw new UnauthorizedException('Invalid credentials');
         }
 
-        throw new UnauthorizedException('Invalid credentials'); // Exception plus précise
+        const payload = { id: existingUser.id };
+        return { access_token: this.jwtService.sign(payload) };
+    }
+
+    /**
+     * Vérifie si un email a un format valide
+     */
+    private isValidEmail(email: string): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
 }

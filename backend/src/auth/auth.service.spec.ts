@@ -27,6 +27,9 @@ describe('AuthService', () => {
     } as any;
 
     authService = new AuthService(jwtService, usersService);
+
+    // Mock console.error pour éviter les logs inutiles dans les tests
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   // 🟢 Test de SignUp
@@ -80,7 +83,7 @@ describe('AuthService', () => {
       (usersService.save as jest.Mock).mockRejectedValue(new Error('Database error'));
 
       await expect(authService.SignUp('testuser', 'password', 'test@example.com'))
-        .rejects.toThrow('Database error');
+        .rejects.toThrow('An error occurred during signup');
     });
   });
 
